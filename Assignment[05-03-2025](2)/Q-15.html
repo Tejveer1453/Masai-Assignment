@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creating Layout from Image</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: linear-gradient(to top, #12EDF4,#203D86); 
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 40px;
+        }
+        nav a {
+            text-decoration: none;
+            color: white;
+        }
+        section {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+        }
+        h2 {
+            padding-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            color: white;
+            background-color: #191870;
+        }
+        form div {
+            margin-bottom: 10px;
+        }
+        footer {
+            background: linear-gradient(to top, #23629D, #1B2376);
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My Portfolio</h1>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Projects</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section>
+        <h2>Welcome to My Portfolio</h2>
+        <p>this portfolio showcases my projects and provides information about my background and contact details.</p>
+
+        <h2>About</h2>
+        <p>Hello! I'm a web developer passionate about building dynamic and responsive websites. I enjoy creating user-friendly interfaces and working on challenging projects.</p>
+
+        <h2>Projects</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Description</th>
+                    <th>Year</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Project Alpha</td>
+                    <td>A web-based tool for tracking project progress and managing tasks.</td>
+                    <td>2023</td>
+                </tr>
+                <tr>
+                    <td>Portfolio Site</td>
+                    <td>A personal website showcasing my work and skills as a web developer.</td>
+                    <td>2024</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Contact</h2>
+        <form action="#" method="post">
+            <div>
+                <label for="name">Name:</label>
+                <br>
+                <input type="text" id="name">
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <br>
+                <input type="email" id="email">    
+            </div>
+            <div>
+                <label for="message">Message:</label>
+                <br>
+                <textarea id="message" rows="4" cols="50"></textarea>
+            </div>
+            <div>
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </section>
+    <footer></footer>
+</body>
+</html>
