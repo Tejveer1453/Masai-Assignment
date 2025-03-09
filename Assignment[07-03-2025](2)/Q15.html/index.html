@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Complex Navigation Bar</title>
+    <style>
+      nav {
+        background-color: #f0f0f0;
+        padding: 10px;
+      }
+
+      nav section {
+        display: inline-block;
+        margin-right: 20px;
+      }
+
+      nav section:last-child {
+        margin-right: 0;
+      }
+
+      nav section a {
+        display: block;
+        padding: 5px 10px;
+        text-decoration: none;
+        color: #333;
+      }
+
+      /* Descendant Combinators - Section Specific Colors */
+      nav section:nth-child(1) a {
+        color: blue;
+      }
+
+      nav section:nth-child(2) a {
+        color: green;
+      }
+
+      nav section:nth-child(3) a {
+        color: purple;
+      }
+
+      /* Hover and Active Pseudo-classes */
+      nav a:hover {
+        background-color: #ddd;
+      }
+
+      nav a:active {
+        background-color: #ccc;
+      }
+
+      /* Child Combinator - Direct Child Links */
+      nav section > a {
+        font-weight: bold;
+      }
+
+      /* Attribute Selector - HTTPS Links (High Specificity) */
+      nav a[href^="https"] {
+        color: red !important;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <section>
+        <a href="#">Link 1</a>
+        <a href="#">Link 2</a>
+        <a href="https://www.example.com">HTTPS Link 1</a>
+        <a href="#"><span>Nested Link 1</span></a>
+      </section>
+      <section>
+        <a href="#">Link 3</a>
+        <a href="#">Link 4</a>
+        <a href="https://www.example.org">HTTPS Link 2</a>
+        <a href="#"><span>Nested Link 2</span></a>
+      </section>
+      <section>
+        <a href="#">Link 5</a>
+        <a href="#">Link 6</a>
+        <a href="https://www.example.net">HTTPS Link 3</a>
+        <a href="#"><span>Nested Link 3</span></a>
+      </section>
+    </nav>
+  </body>
+</html>

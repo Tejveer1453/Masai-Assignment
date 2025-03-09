@@ -1,0 +1,38 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Added box-sizing */
+}
+
+.container {
+  display: flex; /* Changed to flexbox */
+  padding: 20px; /* Increased padding */
+  justify-content: center; /* Center boxes horizontally */
+  flex-wrap: wrap; /* Allow boxes to wrap on smaller screens */
+}
+
+.box {
+  width: 150px; /* Increased width */
+  height: 150px; /* Increased height */
+  background: lightblue;
+  border: 1px solid black;
+  margin: 10px; /* Adjusted margin */
+  position: static; /* Removed absolute positioning */
+  text-align: center; /* Center text inside box */
+  line-height: 150px; /* Center text vertically inside box */
+}
+
+.text {
+  position: fixed;
+  left: 50%;
+  top: 20px; /* Added top margin */
+  transform: translateX(-50%); /* Center text horizontally */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .box {
+    width: 100%; /* Full width on smaller screens */
+    margin: 10px 0; /* Adjust margin */
+  }
+}
