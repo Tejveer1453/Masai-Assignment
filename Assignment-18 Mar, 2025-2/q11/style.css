@@ -1,0 +1,38 @@
+/* Reset margins and paddings */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* Centering the container */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f8f9fa;
+}
+
+/* Flexbox container */
+.container {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  gap: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Flexbox items */
+.item {
+  background: lightblue;
+  padding: 20px;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+}

@@ -1,0 +1,58 @@
+/* Reset default margins & paddings */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #f8f9fa;
+}
+
+h1 {
+  margin: 20px 0;
+  color: #333;
+}
+
+/* Image Gallery Container */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columns for large screens */
+  gap: 15px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* Image Styling */
+.gallery img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.gallery img:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive Layout */
+@media (max-width: 1024px) {
+  .gallery {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns on medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .gallery {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery {
+    grid-template-columns: repeat(1, 1fr); /* 1 column on small screens */
+  }
+}
