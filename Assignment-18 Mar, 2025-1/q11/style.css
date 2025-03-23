@@ -1,0 +1,30 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+.box {
+  width: 200px;
+  padding: 20px;
+  margin: 20px auto;
+  text-align: center;
+  font-size: 18px;
+}
+
+.box1 {
+  background-color: lightblue;
+  border: 5px solid blue;
+  box-sizing: content-box;
+}
+
+.box2 {
+  background-color: lightgreen;
+  border: 5px dashed green;
+  box-sizing: border-box;
+}
+
+.box3 {
+  background-color: lightcoral;
+  border: 5px dotted red;
+  /* Default box-sizing (content-box) applies */
+}
