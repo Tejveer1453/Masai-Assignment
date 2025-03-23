@@ -1,0 +1,44 @@
+/* Base styles for mobile-first design */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+/* Gallery Container */
+.gallery {
+  display: grid;
+  grid-template-columns: 1fr; /* Default: Single Column */
+  gap: 20px;
+  padding: 10px;
+}
+
+/* Gallery Items */
+.item {
+  background: #3498db;
+  color: white;
+  padding: 20px;
+  border-radius: 5px;
+  font-size: 18px;
+}
+
+/* Medium Screens (768px to 1024px) */
+@media (min-width: 768px) {
+  .gallery {
+    grid-template-columns: repeat(2, 1fr); /* FIXED: Now 2 columns */
+    gap: 20px; /* FIXED: Increased gap to prevent overlapping */
+  }
+}
+
+/* Large Screens (above 1024px) */
+@media (min-width: 1024px) {
+  .gallery {
+    grid-template-columns: repeat(4, 1fr); /* FIXED: Now 4 columns */
+    gap: 25px; /* Adjusted gap for spacing */
+  }
+}
