@@ -1,0 +1,58 @@
+/* Global Styles */
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #f8f8f8;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+/* Grid Layout */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 100px);
+  gap: 10px;
+  max-width: 600px;
+  margin: auto;
+}
+
+/* Grid Items with Different Background Colors */
+.grid-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  border-radius: 8px;
+}
+
+.item1 {
+  background-color: #ff5733;
+}
+.item2 {
+  background-color: #33ff57;
+}
+.item3 {
+  background-color: #3357ff;
+}
+.item4 {
+  background-color: #ff33a8;
+}
+.item5 {
+  background-color: #ffb833;
+}
+.item6 {
+  background-color: #a833ff;
+}
+.item7 {
+  background-color: #33fff2;
+}
+.item8 {
+  background-color: #5733ff;
+}
