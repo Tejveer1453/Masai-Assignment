@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event Propagation Exploration</title>
+    <style>
+      .box {
+        padding: 20px;
+        border: 2px solid black;
+        margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="outer" class="box" style="background-color: lightcoral">
+      Outer Div
+      <button id="outerBtn">Outer Button</button>
+
+      <div id="middle" class="box" style="background-color: lightblue">
+        Middle Div
+        <button id="middleBtn">Middle Button</button>
+
+        <div id="inner" class="box" style="background-color: lightgreen">
+          Inner Div
+          <button id="innerBtn">Inner Button</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Select all divs and buttons
+      const outerDiv = document.getElementById("outer");
+      const middleDiv = document.getElementById("middle");
+      const innerDiv = document.getElementById("inner");
+
+      const outerBtn = document.getElementById("outerBtn");
+      const middleBtn = document.getElementById("middleBtn");
+      const innerBtn = document.getElementById("innerBtn");
+
+      // Function to handle events
+      function showAlert(event) {
+        alert(event.currentTarget.id + " clicked!");
+      }
+
+      // Event Listeners (Bubbling Phase)
+      outerDiv.addEventListener("click", showAlert);
+      middleDiv.addEventListener("click", showAlert);
+      innerDiv.addEventListener("click", showAlert);
+
+      // Event Listeners (Capturing Phase)
+      outerDiv.addEventListener("click", showAlert, true);
+      middleDiv.addEventListener("click", showAlert, true);
+      innerDiv.addEventListener("click", showAlert, true);
+
+      // Button Click Events
+      outerBtn.addEventListener("click", showAlert);
+      middleBtn.addEventListener("click", showAlert);
+      innerBtn.addEventListener("click", function (event) {
+        alert("Inner Button clicked!");
+        event.stopPropagation(); // Stops event from bubbling up
+      });
+    </script>
+  </body>
+</html>

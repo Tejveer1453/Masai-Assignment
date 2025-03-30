@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Understanding the DOM</title>
+    <style>
+      .container {
+        padding: 20px;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="main-heading">Hello World</h1>
+    <p>This is the first paragraph.</p>
+    <p>This is the second paragraph.</p>
+    <p>This is the third paragraph.</p>
+    <div class="container">
+      <p>This div contains some text.</p>
+    </div>
+
+    <script>
+      // Select the <h1> element by its id and change its text content
+      document.getElementById("main-heading").textContent =
+        "Welcome to the DOM World!";
+
+      // Select all <p> elements using getElementsByTagName and change their text color to blue
+      const paragraphs = document.getElementsByTagName("p");
+      for (let p of paragraphs) {
+        p.style.color = "blue";
+      }
+
+      // Use querySelector to select the first <div> with the class container and change its background color to yellow
+      document.querySelector(".container").style.backgroundColor = "yellow";
+    </script>
+  </body>
+</html>

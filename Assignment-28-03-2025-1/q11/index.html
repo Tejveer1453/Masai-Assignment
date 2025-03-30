@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Notes</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 400px;
+        margin: 50px auto;
+        text-align: center;
+      }
+      textarea {
+        width: 100%;
+        height: 150px;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>User Notes</h2>
+    <textarea id="notes" placeholder="Enter your notes here..."></textarea>
+    <br />
+    <button onclick="saveNotes()">Save Notes</button>
+    <button onclick="loadNotes()">Load Notes</button>
+    <button onclick="clearNotes()">Clear Notes</button>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", loadNotes);
+
+      function saveNotes() {
+        let notes = document.getElementById("notes").value.trim();
+        if (notes === "") {
+          alert("Cannot save empty notes!");
+          return;
+        }
+        localStorage.setItem("userNotes", notes);
+        alert("Notes saved successfully!");
+      }
+
+      function loadNotes() {
+        let savedNotes = localStorage.getItem("userNotes");
+        if (savedNotes) {
+          document.getElementById("notes").value = savedNotes;
+        }
+      }
+
+      function clearNotes() {
+        localStorage.removeItem("userNotes");
+        document.getElementById("notes").value = "";
+        alert("Notes cleared!");
+      }
+    </script>
+  </body>
+</html>
