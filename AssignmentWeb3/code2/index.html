@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Novels Library</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: #f2f2f2;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 20px;
+        justify-content: center;
+      }
+      input,
+      select {
+        padding: 8px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+      }
+      th,
+      td {
+        padding: 12px;
+        border: 1px solid #ccc;
+        text-align: left;
+      }
+      th {
+        background: #eee;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>📚 Novel Library</h1>
+
+    <div class="controls">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search by title or author"
+      />
+      <select id="yearFilter">
+        <option value="">All Years</option>
+        <option value="2019">2019</option>
+        <option value="2020">2020</option>
+        <option value="2021">2021</option>
+        <option value="2022">2022</option>
+      </select>
+      <select id="priceSort">
+        <option value="">Sort by Price</option>
+        <option value="asc">Price: Low to High</option>
+        <option value="desc">Price: High to Low</option>
+      </select>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Genre</th>
+          <th>Year</th>
+          <th>Price ($)</th>
+        </tr>
+      </thead>
+      <tbody id="novelTableBody"></tbody>
+    </table>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+      // Import Firebase modules
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        getDocs,
+        query,
+        orderBy,
+        where,
+      } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+      // TODO: Replace with your own Firebase config
+      const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT_ID.appspot.com",
+        messagingSenderId: "YOUR_SENDER_ID",
+        appId: "YOUR_APP_ID",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const novelsRef = collection(db, "novels");
+
+      const tableBody = document.getElementById("novelTableBody");
+      const searchInput = document.getElementById("searchInput");
+      const yearFilter = document.getElementById("yearFilter");
+      const priceSort = document.getElementById("priceSort");
+
+      async function fetchAndRenderNovels() {
+        let q = novelsRef;
+
+        // Filters
+        if (yearFilter.value) {
+          q = query(
+            novelsRef,
+            where("release_year", "==", Number(yearFilter.value))
+          );
+        }
+
+        // Sorting
+        if (priceSort.value === "asc") {
+          q = query(q, orderBy("price", "asc"));
+        } else if (priceSort.value === "desc") {
+          q = query(q, orderBy("price", "desc"));
+        }
+
+        const snapshot = await getDocs(q);
+        let novels = snapshot.docs.map((doc) => doc.data());
+
+        // Search
+        const search = searchInput.value.trim().toLowerCase();
+        if (search) {
+          novels = novels.filter(
+            (novel) =>
+              novel.title.toLowerCase().includes(search) ||
+              novel.author.toLowerCase().includes(search)
+          );
+        }
+
+        renderTable(novels);
+      }
+
+      function renderTable(novels) {
+        tableBody.innerHTML = "";
+        novels.forEach((novel) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+        <td>${novel.title}</td>
+        <td>${novel.author}</td>
+        <td>${novel.genre}</td>
+        <td>${novel.release_year}</td>
+        <td>${novel.price.toFixed(2)}</td>
+      `;
+          tableBody.appendChild(tr);
+        });
+      }
+
+      // Event listeners
+      searchInput.addEventListener("input", fetchAndRenderNovels);
+      yearFilter.addEventListener("change", fetchAndRenderNovels);
+      priceSort.addEventListener("change", fetchAndRenderNovels);
+
+      // Initial fetch
+      fetchAndRenderNovels();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sorted User List</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f4f4f4;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+
+      #sort-controls {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      select {
+        padding: 6px 10px;
+        margin-left: 10px;
+        font-size: 16px;
+      }
+
+      #user-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+      }
+
+      .user-card {
+        background: white;
+        padding: 15px;
+        border-radius: 6px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .user-card h3 {
+        margin-top: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Sort Users by Name</h1>
+
+    <div id="sort-controls">
+      <label for="sort">Sort by:</label>
+      <select id="sort">
+        <option value="">Default</option>
+        <option value="asc">Name (A-Z)</option>
+        <option value="desc">Name (Z-A)</option>
+      </select>
+    </div>
+
+    <div id="user-list"></div>
+
+    <script>
+      const API_URL = "https://jsonplaceholder.typicode.com/users";
+      const userList = document.getElementById("user-list");
+      const sortSelect = document.getElementById("sort");
+
+      // Fetch users and sort if needed
+      async function fetchUsers(sortOrder = "") {
+        try {
+          const res = await fetch(API_URL);
+          if (!res.ok) throw new Error("Failed to fetch users");
+
+          let users = await res.json();
+
+          // Sort based on selected order
+          if (sortOrder === "asc") {
+            users.sort((a, b) => a.name.localeCompare(b.name));
+          } else if (sortOrder === "desc") {
+            users.sort((a, b) => b.name.localeCompare(a.name));
+          }
+
+          renderUsers(users);
+        } catch (err) {
+          userList.innerHTML = `<p style="color:red;">${err.message}</p>`;
+        }
+      }
+
+      // Render users into DOM
+      function renderUsers(users) {
+        userList.innerHTML = "";
+        users.forEach((user) => {
+          const card = document.createElement("div");
+          card.className = "user-card";
+          card.innerHTML = `
+          <h3>${user.name}</h3>
+          <p><strong>Username:</strong> ${user.username}</p>
+          <p><strong>Email:</strong> ${user.email}</p>
+          <p><strong>City:</strong> ${user.address.city}</p>
+        `;
+          userList.appendChild(card);
+        });
+      }
+
+      // Sort change event
+      sortSelect.addEventListener("change", () => {
+        const selectedSort = sortSelect.value;
+        fetchUsers(selectedSort);
+      });
+
+      // Initial fetch
+      fetchUsers();
+    </script>
+  </body>
+</html>

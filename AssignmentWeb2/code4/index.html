@@ -1,0 +1,11 @@
+const deleteUser = (key) => {
+fetch(`https://your-project-id.firebaseio.com/users/${key}.json`, { method:
+'DELETE', }) .then(response => { if (!response.ok) throw new Error("Delete
+failed"); return response.json(); }) .then(() => { console.log("User deleted
+successfully"); // Remove the user from the table UI const row =
+document.getElementById(`user-row-${key}`); if (row) row.remove(); // Optional:
+show a success message const message = document.getElementById("message");
+message.textContent = "User deleted successfully!"; message.style.color =
+"green"; }) .catch(error => { console.error("Error deleting user:", error);
+const message = document.getElementById("message"); message.textContent = "Error
+deleting user."; message.style.color = "red"; }); };

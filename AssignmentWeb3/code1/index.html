@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library Management System</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+        background-color: #f9f9f9;
+      }
+      h1 {
+        text-align: center;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: left;
+      }
+      form {
+        margin-top: 20px;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+      .filters {
+        margin-top: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .pagination {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+      }
+      button {
+        padding: 5px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>📚 Library Management System</h1>
+
+    <form id="bookForm">
+      <input type="text" id="title" placeholder="Book Title" required />
+      <input type="text" id="author" placeholder="Author" required />
+      <input type="text" id="genre" placeholder="Genre" required />
+      <input type="number" id="year" placeholder="Published Year" required />
+      <select id="available">
+        <option value="true">Available</option>
+        <option value="false">Unavailable</option>
+      </select>
+      <button type="submit">Add Book</button>
+    </form>
+
+    <div class="filters">
+      <select id="filterGenre">
+        <option value="">All Genres</option>
+        <option value="Science Fiction">Science Fiction</option>
+        <option value="Dystopian">Dystopian</option>
+      </select>
+      <select id="filterAvailable">
+        <option value="">All Availability</option>
+        <option value="true">Available</option>
+        <option value="false">Unavailable</option>
+      </select>
+      <select id="sortBy">
+        <option value="">Sort By</option>
+        <option value="title">Title</option>
+        <option value="author">Author</option>
+      </select>
+      <select id="itemsPerPage">
+        <option value="3">3 per page</option>
+        <option value="5" selected>5 per page</option>
+        <option value="10">10 per page</option>
+      </select>
+    </div>
+
+    <table id="booksTable">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Genre</th>
+          <th>Year</th>
+          <th>Available</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="pagination">
+      <button id="prevBtn">⬅️ Prev</button>
+      <span id="pageNumber">1</span>
+      <button id="nextBtn">Next ➡️</button>
+    </div>
+
+    <script>
+      const BASE_URL = "https://YOUR_FIREBASE_URL.firebaseio.com/books";
+      const form = document.getElementById("bookForm");
+      const tbody = document.querySelector("#booksTable tbody");
+      const filters = {
+        genre: document.getElementById("filterGenre"),
+        available: document.getElementById("filterAvailable"),
+        sort: document.getElementById("sortBy"),
+        limit: document.getElementById("itemsPerPage"),
+      };
+      const pagination = {
+        page: 1,
+        limit: 5,
+      };
+
+      let books = [];
+
+      const loadState = () => {
+        const saved = JSON.parse(localStorage.getItem("state")) || {};
+        filters.genre.value = saved.genre || "";
+        filters.available.value = saved.available || "";
+        filters.sort.value = saved.sort || "";
+        filters.limit.value = saved.limit || "5";
+        pagination.page = saved.page || 1;
+      };
+
+      const saveState = () => {
+        const state = {
+          genre: filters.genre.value,
+          available: filters.available.value,
+          sort: filters.sort.value,
+          limit: filters.limit.value,
+          page: pagination.page,
+        };
+        localStorage.setItem("state", JSON.stringify(state));
+      };
+
+      const fetchBooks = async () => {
+        const res = await fetch(`${BASE_URL}.json`);
+        const data = await res.json();
+        books = Object.keys(data || {}).map((id) => ({ id, ...data[id] }));
+        renderBooks();
+      };
+
+      const renderBooks = () => {
+        saveState();
+        let filtered = [...books];
+
+        // Filters
+        if (filters.genre.value) {
+          filtered = filtered.filter((b) => b.genre === filters.genre.value);
+        }
+        if (filters.available.value) {
+          filtered = filtered.filter(
+            (b) => b.available.toString() === filters.available.value
+          );
+        }
+
+        // Sorting
+        if (filters.sort.value) {
+          filtered.sort((a, b) =>
+            a[filters.sort.value].localeCompare(b[filters.sort.value])
+          );
+        }
+
+        // Pagination
+        const limit = +filters.limit.value;
+        const start = (pagination.page - 1) * limit;
+        const paginated = filtered.slice(start, start + limit);
+
+        // Render
+        tbody.innerHTML = "";
+        paginated.forEach((book) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+          <td>${book.title}</td>
+          <td>${book.author}</td>
+          <td>${book.genre}</td>
+          <td>${book.publishedYear}</td>
+          <td>${book.available ? "✅" : "❌"}</td>
+          <td><button onclick="deleteBook('${book.id}')">Delete</button></td>
+        `;
+          tbody.appendChild(tr);
+        });
+
+        // Pagination UI
+        document.getElementById("pageNumber").textContent = pagination.page;
+      };
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const newBook = {
+          title: title.value,
+          author: author.value,
+          genre: genre.value,
+          publishedYear: +year.value,
+          available: available.value === "true",
+        };
+        await fetch(`${BASE_URL}.json`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newBook),
+        });
+        form.reset();
+        await fetchBooks();
+      });
+
+      const deleteBook = async (id) => {
+        await fetch(`${BASE_URL}/${id}.json`, { method: "DELETE" });
+        await fetchBooks();
+      };
+
+      document.getElementById("prevBtn").onclick = () => {
+        if (pagination.page > 1) pagination.page--;
+        renderBooks();
+      };
+
+      document.getElementById("nextBtn").onclick = () => {
+        const limit = +filters.limit.value;
+        if (pagination.page * limit < books.length) pagination.page++;
+        renderBooks();
+      };
+
+      filters.genre.onchange =
+        filters.available.onchange =
+        filters.sort.onchange =
+        filters.limit.onchange =
+          () => {
+            pagination.page = 1;
+            renderBooks();
+          };
+
+      loadState();
+      fetchBooks();
+    </script>
+  </body>
+</html>

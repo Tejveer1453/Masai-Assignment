@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Update Firebase Users</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f3f3f3;
+        padding: 30px;
+      }
+
+      h1 {
+        text-align: center;
+      }
+
+      table {
+        width: 90%;
+        margin: auto;
+        margin-top: 30px;
+        border-collapse: collapse;
+        background-color: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      th,
+      td {
+        padding: 12px;
+        border: 1px solid #ddd;
+        text-align: left;
+      }
+
+      th {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      .edit-btn {
+        background-color: #007bff;
+        color: white;
+        padding: 6px 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+
+      .edit-form {
+        width: 300px;
+        margin: 30px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: none;
+      }
+
+      .edit-form input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 12px;
+      }
+
+      .edit-form button {
+        width: 100%;
+        padding: 10px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+      }
+
+      #message {
+        text-align: center;
+        margin-top: 20px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Firebase User List</h1>
+    <div id="message"></div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Edit</th>
+        </tr>
+      </thead>
+      <tbody id="userTableBody">
+        <!-- Data populated here -->
+      </tbody>
+    </table>
+
+    <div class="edit-form" id="editForm">
+      <h3>Edit User</h3>
+      <input type="text" id="editName" placeholder="Name" required />
+      <input type="email" id="editEmail" placeholder="Email" required />
+      <button id="updateBtn">Update</button>
+    </div>
+
+    <script>
+      const baseURL = "https://YOUR-PROJECT-ID.firebaseio.com/users";
+      const userTableBody = document.getElementById("userTableBody");
+      const editForm = document.getElementById("editForm");
+      const editName = document.getElementById("editName");
+      const editEmail = document.getElementById("editEmail");
+      const updateBtn = document.getElementById("updateBtn");
+      const message = document.getElementById("message");
+
+      let currentUserId = null;
+
+      async function fetchUsers() {
+        userTableBody.innerHTML = "";
+        try {
+          const res = await fetch(`${baseURL}.json`);
+          const data = await res.json();
+
+          for (let id in data) {
+            const tr = document.createElement("tr");
+
+            const nameTd = document.createElement("td");
+            nameTd.textContent = data[id].name;
+
+            const emailTd = document.createElement("td");
+            emailTd.textContent = data[id].email;
+
+            const editTd = document.createElement("td");
+            const btn = document.createElement("button");
+            btn.textContent = "Edit";
+            btn.classList.add("edit-btn");
+            btn.onclick = () => openEditForm(id, data[id].name, data[id].email);
+
+            editTd.appendChild(btn);
+            tr.appendChild(nameTd);
+            tr.appendChild(emailTd);
+            tr.appendChild(editTd);
+            userTableBody.appendChild(tr);
+          }
+        } catch (err) {
+          message.textContent = "Error fetching users!";
+          message.style.color = "red";
+        }
+      }
+
+      function openEditForm(id, name, email) {
+        currentUserId = id;
+        editName.value = name;
+        editEmail.value = email;
+        editForm.style.display = "block";
+        message.textContent = "";
+      }
+
+      updateBtn.addEventListener("click", async () => {
+        const name = editName.value.trim();
+        const email = editEmail.value.trim();
+
+        if (!name || !email) {
+          message.textContent = "All fields are required.";
+          message.style.color = "red";
+          return;
+        }
+
+        try {
+          const res = await fetch(`${baseURL}/${currentUserId}.json`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name, email }),
+          });
+
+          if (!res.ok) throw new Error("Update failed");
+
+          message.textContent = "User updated successfully!";
+          message.style.color = "green";
+          editForm.style.display = "none";
+          fetchUsers();
+        } catch (err) {
+          message.textContent = "Error: " + err.message;
+          message.style.color = "red";
+        }
+      });
+
+      fetchUsers();
+    </script>
+  </body>
+</html>
